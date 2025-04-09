@@ -3,6 +3,7 @@ import random
 import pygame
 import sys
 import config # Import the config module 
+import time
 def init_game (): 
     pygame.init()
     pygame.font.init()
@@ -24,13 +25,33 @@ def handle_events ():
 def draw_rectangle(screen, x, y, width, height): 
    pygame.draw.rect(screen, config.GREEN, (x, y, width, height))
 
+# -- Draw Counter -- #
+def draw_counter(screen, counter):
+    font = pygame.font.Font(None, 30)  # Set font and size
+    counter_text = font.render(f"Wall Hits: {counter}", True, (0, 0, 0)) # counter color
+    screen.blit(counter_text, (10, 10))  # Stamp text at the top-left corner
 
+# -- Draw Speed -- #
+def draw_speed(screen, speed):
+    font = pygame.font.Font(None, 30)  # Set font and size
+    speed_text = font.render(f"Speed: {speed:.1f}", True, (0, 0, 0)) # speed color
+    screen.blit(speed_text, (10, 40))  # Stamp text at the top-left corner
+
+def draw_text(screen):
+    font = pygame.font.Font(None, 30)  # Set font and size
+    img_textI = font.render(f"Press \"I\" to increase", True, (0, 0, 0)) # speed color
+    img_textD = font.render(f"Press \"D\" to increase", True, (0, 0, 0)) # speed color
+    screen.blit(img_textI, (10, 70))  # Stamp text at the top-left corner
+    screen.blit(img_textD, (10, 100))  # Stamp text at the top-left corner
 
 
 def main():
    screen = init_game()
    clock = pygame.time.Clock() # Initialize the clock here
 
+   # -- Set Counter -- #
+   counter = 0
+   speed = 0
    # -- Set Starting X,Y For Square -- # 
    x = 0
    y = 0
@@ -53,18 +74,50 @@ def main():
       # -- If Touch Border -- # 
          # -- X -- #
       if x + width > config.WINDOW_WIDTH - 1 or x < 0:
-         speed_x = speed_x * -1.15
-         height += 1
-         width += 1
+         speed_x = speed_x * -1
+         counter += 1
          # -- Y -- #
       if y + height > config.WINDOW_HEIGHT - 1 or y < 0:
-         speed_y = speed_y * -1.15
-         height += 1
-         width += 1
+         speed_y = speed_y * -1
+         counter += 1
+
+      # -- Speed Change if I Press -- #
+      key = pygame.key.get_pressed()
+      if key[pygame.K_i]:
+
+         if speed < 50: 
+            speed_x += 0.05
+            speed_y += 0.05
+            speed += 0.1
+         else: 
+            speed_x = speed_x
+            speed_y = speed_y
+            speed = speed
+
+      # -- Speed Change if D Press -- #
+      if key[pygame.K_d]: 
+
+         if speed > 50: 
+            speed_x -= 0.05
+            speed_y -= 0.05
+            speed -= 0.1
+
+         else: 
+            speed_x = speed_x
+            speed_y = speed_y
+            speed = speed
+
 
       # -- Draw Rectangle -- #
       draw_rectangle(screen, x, y, width, height)
+      
+      # -- Draw Counter -- #
+      draw_counter(screen, counter)
 
+      # -- Draw speed -- #
+      draw_speed(screen, speed)
+
+      draw_text(screen)
       pygame.display.flip()
 
       # -- Limit the frame rate to the specified frames per second (FPS) -- #
