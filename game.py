@@ -31,19 +31,6 @@ def draw_counter(screen, counter):
     counter_text = font.render(f"Wall Hits: {counter}", True, (0, 0, 0)) # counter color
     screen.blit(counter_text, (10, 10))  # Stamp text at the top-left corner
 
-# -- Draw Speed -- #
-def draw_speed(screen, speed):
-    font = pygame.font.Font(None, 30)  # Set font and size
-    speed_text = font.render(f"Speed: {speed:.1f}", True, (0, 0, 0)) # speed color
-    screen.blit(speed_text, (10, 40))  # Stamp text at the top-left corner
-
-def draw_text(screen):
-    font = pygame.font.Font(None, 30)  # Set font and size
-    img_textI = font.render(f"Press \"I\" to increase", True, (0, 0, 0)) # speed color
-    img_textD = font.render(f"Press \"D\" to increase", True, (0, 0, 0)) # speed color
-    screen.blit(img_textI, (10, 70))  # Stamp text at the top-left corner
-    screen.blit(img_textD, (10, 100))  # Stamp text at the top-left corner
-
 
 def main():
    screen = init_game()
@@ -51,15 +38,15 @@ def main():
 
    # -- Set Counter -- #
    counter = 0
-   speed = 0
+
    # -- Set Starting X,Y For Square -- # 
    x = 0
    y = 0
    # -- Square Properties -- #
    width = 50
    height = 50
-   speed_x = 2
-   speed_y = 2
+   speed_x = 5
+   speed_y = 5
 
    running = True
    while running:
@@ -81,43 +68,12 @@ def main():
          speed_y = speed_y * -1
          counter += 1
 
-      # -- Speed Change if I Press -- #
-      key = pygame.key.get_pressed()
-      if key[pygame.K_i]:
-
-         if speed < 50: 
-            speed_x += 0.05
-            speed_y += 0.05
-            speed += 0.1
-         else: 
-            speed_x = speed_x
-            speed_y = speed_y
-            speed = speed
-
-      # -- Speed Change if D Press -- #
-      if key[pygame.K_d]: 
-
-         if speed > 50: 
-            speed_x -= 0.05
-            speed_y -= 0.05
-            speed -= 0.1
-
-         else: 
-            speed_x = speed_x
-            speed_y = speed_y
-            speed = speed
-
-
       # -- Draw Rectangle -- #
       draw_rectangle(screen, x, y, width, height)
       
       # -- Draw Counter -- #
       draw_counter(screen, counter)
 
-      # -- Draw speed -- #
-      draw_speed(screen, speed)
-
-      draw_text(screen)
       pygame.display.flip()
 
       # -- Limit the frame rate to the specified frames per second (FPS) -- #
